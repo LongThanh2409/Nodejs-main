@@ -25,21 +25,15 @@ export const GetID = async (req, res) => {
         const { data: users } = await axios.get(
             `${API_URL}${req.params.id}`
         );
-        // users.map((index) => {
-        //     const ids = index.params.id
 
-        //     if (req.params.id != ids) {
-
-        //         res.send({
-        //             messenger: "Danh sách trống"
-        //         })
-        //     }
-        // })
 
         return res.status(200).json(users);
 
     }
     catch (err) {
+        if (err.response.status === 404) {
+            return res.status(404).json({ messenger: "Không tìm thấy người dùng với id tương ứng" });
+        }
         res.status(500).json({ messenger: err })
     }
 }
@@ -51,7 +45,7 @@ export const PostUser = async (req, res) => {
     });
     const { error } = schema.validate(req.body);
     if (error) {
-        return res.status(400).json({ error: "Cần nhập đủ cả username và name và email"});
+        return res.status(400).json({ error: "Cần nhập đủ cả username và name và email" });
     }
     try {
 
@@ -67,19 +61,26 @@ export const PostUser = async (req, res) => {
     }
 }
 export const DELETE = async (req, res) => {
+
+
     try {
-        await axios.delete(
+        const { data: users } = await axios.delete(
             `${API_URL}${req.params.id}`
         );
 
+
+
         return res.status(200).json({
-            messenger: "Sản phẩm đã được xóa"
+            messenger: "User đã được xóa"
         }
 
         );
 
     }
     catch (err) {
+        if (err.response.status === 404) {
+            return res.status(404).json({ messenger: "Không tìm thấy người dùng với id tương ứng" });
+        }
         res.status(500).json({ messenger: err })
     }
 }
@@ -93,6 +94,9 @@ export const PutUser = async (req, res) => {
         return res.status(200).json(users);
     }
     catch (err) {
+        if (err.response.status === 404) {
+            return res.status(404).json({ messenger: "Không tìm thấy người dùng với id tương ứng" });
+        }
         res.status(500).json({ messenger: err })
     }
 }
@@ -106,6 +110,9 @@ export const PatchUser = async (req, res) => {
         return res.status(200).json(users);
     }
     catch (err) {
+        if (err.response.status === 404) {
+            return res.status(404).json({ messenger: "Không tìm thấy người dùng với id tương ứng" });
+        }
         res.status(500).json({ messenger: err })
     }
 }
